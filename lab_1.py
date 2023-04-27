@@ -35,7 +35,7 @@ def print_table(a_coeffs, b_coeffs):
     print()
 
 
-n = 10
+n = 30
 k_max = 12
 
 print("\nЗначення ряду Фур'є, при n=12: ", f(n, k_max), "\n")
@@ -58,7 +58,7 @@ def fourier_series(x, n, k_max, a_coeffs, b_coeffs):
 
 
 # побудова графіку
-x_vals = np.linspace(-np.pi, np.pi, 500)
+x_vals = np.linspace(-np.pi, np.pi , 500)
 y_vals = [f(x, n) for x in x_vals]
 y_series_vals = [fourier_series(x, n, k_max, a_coeffs, b_coeffs) for x in x_vals]
 
@@ -126,16 +126,9 @@ save_results_to_files(a_coeffs, b_coeffs, n, k_max, rel_error)
 
 # побудова графіку
 
-x_vals_2 = np.linspace(-3*np.pi, -np.pi, 500)
-x_vals_3 = np.linspace(np.pi, 3*np.pi, 500)
-#y_vals = [f(x, n) for x in x_vals]
-y_series_vals = [fourier_series(x, n, k_max, a_coeffs, b_coeffs) for x in x_vals]
+
 plt.plot(x_vals, y_vals, label='f(x)', color="red")
-plt.plot(x_vals_2, y_vals, color="red")
-plt.plot(x_vals_3, y_vals, color="red")
 plt.plot(x_vals, y_series_vals, label=f'Fourier series, N={k_max}', color="green")
-plt.plot(x_vals_2, y_series_vals, color="green")
-plt.plot(x_vals_3, y_series_vals, color="green")
 
 plt.xlabel('x')
 plt.ylabel('y')
@@ -151,11 +144,11 @@ def fourier_series(x, n, k_max, a_coeffs, b_coeffs):
 
 
 y_vals = [f(x, n) for x in x_vals]
-y_series_vals = fourier_series(x_vals, n, 10, a_coeffs, b_coeffs)
+y_series_vals = fourier_series(x_vals, n, k_max, a_coeffs, b_coeffs)
 plt.plot(x_vals, y_vals, label='f(x)')
 for k, y_k in enumerate(y_series_vals):
     plt.plot(x_vals, y_k, label=f'N_{k + 1}(x)')
-plt.legend()
+plt.legend(fontsize="7")
 plt.show()
 
 # Обчислюємо значення функції для кожного x
@@ -171,3 +164,14 @@ for n in range(1, N + 1):
 y_series_vals = np.zeros(len(x_vals))
 for n in range(1, N + 1):
     y_series_vals += a_vals[n - 1] * np.cos(n * x_vals) + b_vals[n - 1] * np.sin(n * x_vals)
+
+# Обчислюємо значення відносної помилки для кожного x
+errors = []
+for i in range(len(x_vals)):
+    errors.append(relative_error(x_vals[i], f_vals[i], y_series_vals[i]))
+
+# Побудова графіка відносної помилки
+plt.plot(x_vals, errors)
+plt.xlabel('x')
+plt.ylabel('Relative error')
+plt.show()
